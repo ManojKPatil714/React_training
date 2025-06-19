@@ -24,7 +24,7 @@ function makeMultiply(multiplier) {
 }
 
 const double = makeMultiply(2);
-console.log("call makeMultiply function ", double(5)); 
+console.log("call makeMultiply function ", double(5)); // 10
 
 const triple = makeMultiply(30);
 console.log("call makeMultiply function again ",triple(15)); // 150
