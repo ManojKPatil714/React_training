@@ -26,7 +26,8 @@ function Droppable({ id, children }) {
     alignItems: 'center',
     justifyContent: 'center',
     border: '2px dashed #333',
-    marginLeft: 16
+    marginLeft: 16,
+    flexDirection: 'column',
   };
   return (
     <div ref={setNodeRef} style={style}>{children}</div>
@@ -34,14 +35,14 @@ function Droppable({ id, children }) {
 }
 
 export default function DragDropModule() {
-  const [dropped, setDropped] = useState('');
-  const items = ['A', 'B', 'C'];
+  const [sourceItems, setSourceItems] = useState(['A', 'B', 'C']);
+  const [droppedItems, setDroppedItems] = useState([]);
 
   function handleDragEnd({ active, over }) {
-    if (over) {
-      setDropped(`Dropped ${active.id} into ${over.id}`);
-    } else {
-      setDropped('Dropped outside');
+    if (over && over.id === 'drop-zone') {
+      // Move item from source to drop zone
+      setSourceItems((items) => items.filter(item => item !== active.id));
+      setDroppedItems((items) => [...items, active.id]);
     }
   }
 
@@ -49,13 +50,12 @@ export default function DragDropModule() {
     <section style={{ padding: 20 }}>
       <h2>Drag & Drop</h2>
       <DndContext
-        onDragOver={e => console.log('Over:', e.over?.id)}
         onDragEnd={handleDragEnd}
       >
         <div style={{ display: 'flex', gap: 20 }}>
           <div>
             <h4>Draggables</h4>
-            {items.map(id => (
+            {sourceItems.map(id => (
               <Draggable key={id} id={id}>
                 <span style={{
                   display: 'inline-block',
@@ -70,10 +70,17 @@ export default function DragDropModule() {
             ))}
           </div>
           <Droppable id="drop-zone">
-            <p>Drop items here</p>
+            {droppedItems.length === 0 ? <p>Drop items here</p> :
+              droppedItems.map(id => (
+                <div key={id} style={{
+                  padding: '0.5rem 1rem',
+                  border: '1px solid green',
+                  marginBottom: 8,
+                }}>{id}</div>
+              ))
+            }
           </Droppable>
         </div>
-        {dropped && <p style={{ marginTop: 16 }}>{dropped}</p>}
       </DndContext>
     </section>
   );
