@@ -1,5 +1,6 @@
 import React from 'react';
-import { useFetch } from './hooks/useFetch';
+import { useFetch } from '../hooks/useFetch';
+
 
 export default function FetchModule() {
   const { data, loading, error, refetch } = useFetch(

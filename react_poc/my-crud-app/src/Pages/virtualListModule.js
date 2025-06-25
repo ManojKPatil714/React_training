@@ -1,5 +1,6 @@
 import React from 'react';
-import VirtualList from './VirtualizedList';
+import VirtualList from '../components/VirtualList';
+
 
 export default function VirtualListModule() {
   return (

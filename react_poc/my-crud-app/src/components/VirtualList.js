@@ -1,7 +1,7 @@
 import React from "react";
 import { FixedSizeList as List} from "react-window";
 
-const rowCount = 1000;
+const rowCount = 100;
 const rowHeight = 40;
 
 const items = Array.from({length: rowCount}, (__, i) =>  `item #${i + 1}`);
@@ -33,9 +33,7 @@ const Row = ({index, style}) => (
 const VirtualList = () => (
   <div
     style={{
-      paddingTop: '50px',
-      paddingBottom: '50px',
-      height: 'calc(100vh - 100px)',
+      height: 'calc(0px + 90vh);',
       width: '100%',
       boxSizing: 'border-box',
     }}

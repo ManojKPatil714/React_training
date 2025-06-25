@@ -1,34 +1,55 @@
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Menu from './menu';
+import React, { Suspense, lazy, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AppDrawer from './components/AppDrawer';
+import { Box, Toolbar } from '@mui/material';
+import Header from './components/Header';
+import ErrorBoundary from './components/ErrorBoundary';
+import ErrorFallback from './components/ErrorFallback';
 
-const FetchModule = lazy(() => import('./FetchModule'));
-const VirtualListModule = lazy(() => import('./virtualListModule'));
-const DragDropModule = lazy(() => import('./dragDropModule'));
+const FetchModule = lazy(() => import('./Pages/FetchModule'));
+const VirtualListModule = lazy(() => import('./Pages/virtualListModule'));
+const DragDropModule = lazy(() => import('./Pages/dragDropModule'));
+const Dashboard = lazy(() => import('./Pages/Dashboard'));
+const Reports = lazy(() => import('./Pages/Reports'));
+const Settings = lazy(() => import('./Pages/Setting'));
 
+const drawerWidth = 200;
+const collapsedWidth = 60;
 
 function App() {
-
-  <Router>
-    <div style={{ padding: 20, fontFamily: 'Arial, sans-serif' }}>
-      <Menu />
-
-      <nav style={{ margin: '10px 0' }}>
-        <Link to="/fetch" style={{ marginRight: 10 }}>Fetch</Link>
-        <Link to="/virtual" style={{ marginRight: 10 }}>Virtual List</Link>
-        <Link to="/dragdrop">Drag & Drop</Link>
-      </nav>
-
-      <Suspense fallback={<p>Loading...</p>}>
-        <Routes>
-          <Route path="/" element={<p>Select a feature using the menu above.</p>} />
-          <Route path="/fetch" element={<FetchModule />} />
-          <Route path="/virtual" element={<VirtualListModule />} />
-          <Route path="/dragdrop" element={<DragDropModule />} />
-        </Routes>
-      </Suspense>
-    </div>
-  </Router>
+  const [drawerOpen, setDrawerOpen] = useState(true);
+  const toggleDrawer = () => setDrawerOpen(prev => !prev);
+  return (
+    <Router>
+      <Box sx={{ display: 'flex' }}>
+        <AppDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+        <Box component="main" sx={{
+            flexGrow: 1,
+            transition: 'margin-left 0.3s',
+            marginLeft: drawerOpen ? `${drawerWidth}px` : `${collapsedWidth}px`
+          }}
+        >
+        
+          <Header toggleDrawer={toggleDrawer} />
+          <Toolbar />
+          <Box sx={{ p: 3 }}>
+            <ErrorBoundary fallback={ErrorFallback}>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/fetchmodule" element={<FetchModule />} />
+                  <Route path="/virtuallist" element={<VirtualListModule />} />
+                  <Route path="/dragdrop" element={<DragDropModule />} />
+                </Routes>
+              </Suspense>
+            </ErrorBoundary>
+          </Box>
+        </Box>
+      </Box>
+    </Router>
+  );
 }
 
 export default App;
